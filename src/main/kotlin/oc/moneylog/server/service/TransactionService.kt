@@ -23,19 +23,34 @@ class TransactionService(
     }
 
     fun updateTags(transactionId: Long, tags: List<String>): Transaction {
-        val tx = findById(transactionId)
+        if (repository != null) {
+            val entity = repository.findById(transactionId)
+                .orElseThrow { IllegalArgumentException("transaction not found: $transactionId") }
+            entity.tags = tags.filter { it.isNotBlank() }.toMutableSet()
+            entity.excluded = false
+            entity.exclusionReason = null
+            return repository.save(entity).toDomain()
+        }
+
+        val tx = findInStore(transactionId)
         tx.tags = tags.filter { it.isNotBlank() }.toMutableSet()
         tx.excluded = false
         tx.exclusionReason = null
-        persist(tx)
         return tx
     }
 
     fun updateExcluded(transactionId: Long, excluded: Boolean, reason: String?): Transaction {
-        val tx = findById(transactionId)
+        if (repository != null) {
+            val entity = repository.findById(transactionId)
+                .orElseThrow { IllegalArgumentException("transaction not found: $transactionId") }
+            entity.excluded = excluded
+            entity.exclusionReason = if (excluded) reason ?: "MANUAL" else null
+            return repository.save(entity).toDomain()
+        }
+
+        val tx = findInStore(transactionId)
         tx.excluded = excluded
         tx.exclusionReason = if (excluded) reason ?: "MANUAL" else null
-        persist(tx)
         return tx
     }
 
@@ -70,26 +85,14 @@ class TransactionService(
     }
 
     private fun loadAll(): MutableList<Transaction> {
-        val rows = repository?.findAll().orEmpty()
-        return if (rows.isNotEmpty()) rows.map { it.toDomain() }.toMutableList() else store.transactions
+        if (repository != null) {
+            return repository.findAll().map { it.toDomain() }.toMutableList()
+        }
+        return store.transactions
     }
 
-    private fun findById(id: Long): Transaction =
-        loadAll().find { it.id == id } ?: throw IllegalArgumentException("transaction not found: $id")
-
-    private fun persist(tx: Transaction) {
-        repository?.save(
-            TransactionEntity(
-                id = tx.id,
-                occurredAt = tx.occurredAt,
-                merchant = tx.merchant,
-                amount = tx.amount,
-                tags = tx.tags,
-                excluded = tx.excluded,
-                exclusionReason = tx.exclusionReason,
-            ),
-        )
-    }
+    private fun findInStore(id: Long): Transaction =
+        store.transactions.find { it.id == id } ?: throw IllegalArgumentException("transaction not found: $id")
 
     private fun TransactionEntity.toDomain(): Transaction = Transaction(
         id = id ?: 0,

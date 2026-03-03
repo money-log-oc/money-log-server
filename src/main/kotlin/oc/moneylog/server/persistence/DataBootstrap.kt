@@ -21,7 +21,7 @@ class DataBootstrap {
             txRepo.saveAll(
                 store.transactions.map {
                     TransactionEntity(
-                        id = it.id,
+                        // id는 DB가 생성하도록 둔다 (IDENTITY)
                         occurredAt = it.occurredAt,
                         merchant = it.merchant,
                         amount = it.amount,
