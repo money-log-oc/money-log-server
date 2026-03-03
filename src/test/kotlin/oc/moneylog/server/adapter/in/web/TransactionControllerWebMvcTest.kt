@@ -1,0 +1,51 @@
+package oc.moneylog.server.adapter.`in`.web
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import oc.moneylog.server.adapter.`in`.web.transaction.TransactionController
+import oc.moneylog.server.application.transaction.TransactionUseCase
+import oc.moneylog.server.domain.Transaction
+import org.junit.jupiter.api.Test
+import org.mockito.kotlin.whenever
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.http.MediaType
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.time.LocalDateTime
+
+@WebMvcTest(TransactionController::class)
+class TransactionControllerWebMvcTest {
+    @Autowired lateinit var mockMvc: MockMvc
+    @Autowired lateinit var objectMapper: ObjectMapper
+
+    @MockBean lateinit var transactionUseCase: TransactionUseCase
+
+    @Test
+    fun `get transactions returns list`() {
+        whenever(transactionUseCase.list("2026-03", false)).thenReturn(
+            listOf(Transaction(1, LocalDateTime.now(), "파리바게뜨", 2700)),
+        )
+
+        mockMvc.perform(get("/api/transactions").param("month", "2026-03"))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$[0].merchant").value("파리바게뜨"))
+    }
+
+    @Test
+    fun `patch transaction tag updates tag`() {
+        val tx = Transaction(1, LocalDateTime.now(), "파리바게뜨", 2700, mutableSetOf("음식"))
+        whenever(transactionUseCase.updateTags(1, listOf("음식"))).thenReturn(tx)
+
+        mockMvc.perform(
+            patch("/api/transactions/1/tag")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mapOf("tagIds" to listOf("음식")))),
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.tags[0]").value("음식"))
+    }
+}
