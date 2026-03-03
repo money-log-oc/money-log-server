@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16
+    container_name: moneylog-postgres
+    environment:
+      POSTGRES_DB: moneylog
+      POSTGRES_USER: moneylog
+      POSTGRES_PASSWORD: moneylog
+    ports:
+      - "5432:5432"
+    volumes:
+      - moneylog_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U moneylog -d moneylog"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  moneylog_pgdata:
