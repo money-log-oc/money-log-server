@@ -1,17 +1,20 @@
 package oc.moneylog.server.service
 
 import oc.moneylog.server.domain.Transaction
+import oc.moneylog.server.persistence.entity.TransactionEntity
+import oc.moneylog.server.persistence.repo.TransactionRepository
 import oc.moneylog.server.store.InMemoryStore
 import org.springframework.stereotype.Service
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Service
 class TransactionService(
     private val store: InMemoryStore,
+    private val repository: TransactionRepository? = null,
 ) {
     fun list(month: String?, unclassifiedOnly: Boolean): List<Transaction> {
-        val filtered = store.transactions.asSequence().filter { tx ->
+        val source = loadAll()
+        val filtered = source.asSequence().filter { tx ->
             val byMonth = if (month.isNullOrBlank()) true else tx.occurredAt.toLocalDate().toString().startsWith(month)
             val byClass = if (unclassifiedOnly) tx.tags.isEmpty() && !tx.excluded else true
             byMonth && byClass
@@ -24,6 +27,7 @@ class TransactionService(
         tx.tags = tags.filter { it.isNotBlank() }.toMutableSet()
         tx.excluded = false
         tx.exclusionReason = null
+        persist(tx)
         return tx
     }
 
@@ -31,6 +35,7 @@ class TransactionService(
         val tx = findById(transactionId)
         tx.excluded = excluded
         tx.exclusionReason = if (excluded) reason ?: "MANUAL" else null
+        persist(tx)
         return tx
     }
 
@@ -64,6 +69,35 @@ class TransactionService(
             .toList()
     }
 
+    private fun loadAll(): MutableList<Transaction> {
+        val rows = repository?.findAll().orEmpty()
+        return if (rows.isNotEmpty()) rows.map { it.toDomain() }.toMutableList() else store.transactions
+    }
+
     private fun findById(id: Long): Transaction =
-        store.transactions.find { it.id == id } ?: throw IllegalArgumentException("transaction not found: $id")
+        loadAll().find { it.id == id } ?: throw IllegalArgumentException("transaction not found: $id")
+
+    private fun persist(tx: Transaction) {
+        repository?.save(
+            TransactionEntity(
+                id = tx.id,
+                occurredAt = tx.occurredAt,
+                merchant = tx.merchant,
+                amount = tx.amount,
+                tags = tx.tags,
+                excluded = tx.excluded,
+                exclusionReason = tx.exclusionReason,
+            ),
+        )
+    }
+
+    private fun TransactionEntity.toDomain(): Transaction = Transaction(
+        id = id ?: 0,
+        occurredAt = occurredAt,
+        merchant = merchant,
+        amount = amount,
+        tags = tags,
+        excluded = excluded,
+        exclusionReason = exclusionReason,
+    )
 }
