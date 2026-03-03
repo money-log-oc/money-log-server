@@ -1,5 +1,6 @@
 package oc.moneylog.server.controller
 
+import jakarta.validation.Valid
 import oc.moneylog.server.dto.*
 import oc.moneylog.server.service.AllowanceCalculator
 import oc.moneylog.server.service.BudgetService
@@ -22,7 +23,7 @@ class ApiV1Controller(
     }
 
     @PutMapping("/settings/budget")
-    fun updateBudgetSettings(@RequestBody req: BudgetSettingsUpdateRequest): BudgetSettingsResponse {
+    fun updateBudgetSettings(@Valid @RequestBody req: BudgetSettingsUpdateRequest): BudgetSettingsResponse {
         val s = budgetService.updateSettings(req.paydayDay, req.monthlyBudget)
         return BudgetSettingsResponse(s.paydayDay, s.monthlyBudget, s.weekStart)
     }
@@ -51,7 +52,7 @@ class ApiV1Controller(
         }
 
     @PatchMapping("/transactions/{id}/tag")
-    fun updateTags(@PathVariable id: Long, @RequestBody req: TagUpdateRequest): TransactionResponse {
+    fun updateTags(@PathVariable id: Long, @Valid @RequestBody req: TagUpdateRequest): TransactionResponse {
         val tx = transactionService.updateTags(id, req.tagIds)
         return TransactionResponse(tx.id, tx.occurredAt.toString(), tx.merchant, tx.amount, tx.tags.toList(), tx.excluded, tx.exclusionReason)
     }

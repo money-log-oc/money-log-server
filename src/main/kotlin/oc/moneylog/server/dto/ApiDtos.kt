@@ -1,5 +1,10 @@
 package oc.moneylog.server.dto
 
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.Positive
+
 data class BudgetSettingsResponse(
     val paydayDay: Int,
     val monthlyBudget: Long,
@@ -7,7 +12,10 @@ data class BudgetSettingsResponse(
 )
 
 data class BudgetSettingsUpdateRequest(
+    @field:Min(1)
+    @field:Max(28)
     val paydayDay: Int,
+    @field:Positive
     val monthlyBudget: Long,
 )
 
@@ -35,6 +43,7 @@ data class TransactionResponse(
 )
 
 data class TagUpdateRequest(
+    @field:NotEmpty
     val tagIds: List<String>,
 )
 
@@ -52,4 +61,11 @@ data class DailySpendingItem(
     val date: String,
     val income: Long,
     val expense: Long,
+)
+
+data class ErrorResponse(
+    val message: String,
+    val code: String,
+    val path: String,
+    val timestamp: String,
 )
