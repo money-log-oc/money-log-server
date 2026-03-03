@@ -2,19 +2,17 @@ package oc.moneylog.server.controller
 
 import jakarta.validation.Valid
 import oc.moneylog.server.dto.*
-import oc.moneylog.server.service.AllowanceCalculator
+import oc.moneylog.server.application.home.HomeSummaryUseCase
 import oc.moneylog.server.service.BudgetService
 import oc.moneylog.server.service.TransactionService
-import oc.moneylog.server.store.InMemoryStore
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/api/v1")
 class ApiV1Controller(
     private val budgetService: BudgetService,
     private val transactionService: TransactionService,
-    private val store: InMemoryStore,
+    private val homeSummaryUseCase: HomeSummaryUseCase,
 ) {
     @GetMapping("/settings/budget")
     fun getBudgetSettings(): BudgetSettingsResponse {
@@ -29,18 +27,7 @@ class ApiV1Controller(
     }
 
     @GetMapping("/home/summary")
-    fun homeSummary(): HomeSummaryResponse {
-        val now = LocalDateTime.now()
-        val s = budgetService.getSettings()
-        val (start, end) = AllowanceCalculator.cycleRange(now, s.paydayDay)
-        return HomeSummaryResponse(
-            monthlyBudget = s.monthlyBudget,
-            weeklySpent = AllowanceCalculator.weeklySpent(store.transactions, now),
-            weeklyLimit = AllowanceCalculator.weeklyLimit(s, store.transactions, now),
-            livingAccountBalance = 438_200,
-            cycle = CycleRange(start.toString(), end.toString()),
-        )
-    }
+    fun homeSummary(): HomeSummaryResponse = homeSummaryUseCase.get()
 
     @GetMapping("/transactions")
     fun listTransactions(
