@@ -2,6 +2,7 @@ package oc.moneylog.server.adapter.`in`.web
 
 import oc.moneylog.server.adapter.`in`.web.home.HomeController
 import oc.moneylog.server.dto.CycleRange
+import oc.moneylog.server.infrastructure.security.JwtTokenProvider
 import oc.moneylog.server.dto.HomeSummaryResponse
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
@@ -21,6 +22,7 @@ class LegacyV1CompatControllerWebMvcTest {
     @MockitoBean lateinit var homeController: HomeController
     @MockitoBean lateinit var transactionController: oc.moneylog.server.adapter.`in`.web.transaction.TransactionController
     @MockitoBean lateinit var reportController: oc.moneylog.server.adapter.`in`.web.report.ReportController
+    @MockitoBean lateinit var jwtTokenProvider: JwtTokenProvider
 
     @Test
     fun `legacy v1 home summary route should work`() {

@@ -1,9 +1,9 @@
 package oc.moneylog.server.adapter.`in`.web
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import oc.moneylog.server.adapter.`in`.web.budget.BudgetController
 import oc.moneylog.server.application.budget.BudgetUseCase
 import oc.moneylog.server.domain.BudgetSettings
+import oc.moneylog.server.infrastructure.security.JwtTokenProvider
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,9 +19,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @WebMvcTest(BudgetController::class)
 class BudgetControllerWebMvcTest {
     @Autowired lateinit var mockMvc: MockMvc
-    @Autowired lateinit var objectMapper: ObjectMapper
 
     @MockitoBean lateinit var budgetUseCase: BudgetUseCase
+    @MockitoBean lateinit var jwtTokenProvider: JwtTokenProvider
 
     @Test
     fun `get budget settings returns 200`() {
@@ -35,13 +35,12 @@ class BudgetControllerWebMvcTest {
 
     @Test
     fun `put budget settings validates payload`() {
-        val body = mapOf("paydayDay" to 25, "monthlyBudget" to 800000)
         whenever(budgetUseCase.updateSettings(25, 800000)).thenReturn(BudgetSettings(25, 800000, "MONDAY"))
 
         mockMvc.perform(
             put("/api/settings/budget")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body)),
+                .content("""{"paydayDay":25,"monthlyBudget":800000}"""),
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.monthlyBudget").value(800000))
@@ -50,12 +49,10 @@ class BudgetControllerWebMvcTest {
 
     @Test
     fun `invalid budget payload returns 400`() {
-        val body = mapOf("paydayDay" to 31, "monthlyBudget" to -1)
-
         mockMvc.perform(
             put("/api/settings/budget")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body)),
+                .content("""{"paydayDay":31,"monthlyBudget":-1}"""),
         )
             .andExpect(status().isBadRequest)
     }

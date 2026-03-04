@@ -1,9 +1,9 @@
 package oc.moneylog.server.adapter.`in`.web
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import oc.moneylog.server.adapter.`in`.web.auth.AuthController
 import oc.moneylog.server.application.auth.KakaoAuthUseCase
 import oc.moneylog.server.auth.AuthResponse
+import oc.moneylog.server.infrastructure.security.JwtTokenProvider
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,9 +18,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 @WebMvcTest(AuthController::class)
 class AuthControllerWebMvcTest {
     @Autowired lateinit var mockMvc: MockMvc
-    @Autowired lateinit var objectMapper: ObjectMapper
 
     @MockitoBean lateinit var kakaoAuthUseCase: KakaoAuthUseCase
+    @MockitoBean lateinit var jwtTokenProvider: JwtTokenProvider
 
     @Test
     fun `kakao login returns auth response`() {
@@ -31,7 +31,7 @@ class AuthControllerWebMvcTest {
         mockMvc.perform(
             post("/api/auth/kakao")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(mapOf("accessToken" to "token"))),
+                .content("""{"accessToken":"token"}"""),
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.accessToken").value("ml_access_123456"))
@@ -43,7 +43,7 @@ class AuthControllerWebMvcTest {
         mockMvc.perform(
             post("/api/auth/kakao")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(mapOf("accessToken" to ""))),
+                .content("""{"accessToken":""}"""),
         ).andExpect(status().isBadRequest)
     }
 }

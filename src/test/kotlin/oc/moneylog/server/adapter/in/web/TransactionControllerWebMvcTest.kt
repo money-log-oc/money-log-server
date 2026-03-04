@@ -1,9 +1,9 @@
 package oc.moneylog.server.adapter.`in`.web
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import oc.moneylog.server.adapter.`in`.web.transaction.TransactionController
 import oc.moneylog.server.application.transaction.TransactionUseCase
 import oc.moneylog.server.domain.Transaction
+import oc.moneylog.server.infrastructure.security.JwtTokenProvider
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,9 +20,9 @@ import java.time.LocalDateTime
 @WebMvcTest(TransactionController::class)
 class TransactionControllerWebMvcTest {
     @Autowired lateinit var mockMvc: MockMvc
-    @Autowired lateinit var objectMapper: ObjectMapper
 
     @MockitoBean lateinit var transactionUseCase: TransactionUseCase
+    @MockitoBean lateinit var jwtTokenProvider: JwtTokenProvider
 
     @Test
     fun `get transactions returns list`() {
@@ -43,7 +43,7 @@ class TransactionControllerWebMvcTest {
         mockMvc.perform(
             patch("/api/transactions/1/tag")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(mapOf("tagIds" to listOf("음식")))),
+                .content("""{"tagIds":["음식"]}"""),
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.tags[0]").value("음식"))
@@ -55,7 +55,7 @@ class TransactionControllerWebMvcTest {
         mockMvc.perform(
             patch("/api/transactions/1/tag")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(mapOf("tagIds" to emptyList<String>()))),
+                .content("""{"tagIds":[]}"""),
         )
             .andExpect(status().isBadRequest)
     }

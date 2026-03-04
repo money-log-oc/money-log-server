@@ -1,31 +1,22 @@
 package oc.moneylog.server.infrastructure.security
 
-import oc.moneylog.server.adapter.`in`.web.home.HomeController
 import oc.moneylog.server.application.home.HomeSummaryUseCase
 import oc.moneylog.server.dto.CycleRange
 import oc.moneylog.server.dto.HomeSummaryResponse
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
-import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.bean.override.mockito.MockitoBean
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Import
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(HomeController::class)
-@Import(SecurityConfig::class, SecurityIntegrationWebMvcTest.SecurityTestBeans::class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class SecurityIntegrationWebMvcTest {
-
-    @TestConfiguration
-    class SecurityTestBeans {
-        @Bean
-        fun jwtTokenProvider() = JwtTokenProvider()
-    }
 
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -34,9 +25,9 @@ class SecurityIntegrationWebMvcTest {
     lateinit var homeSummaryUseCase: HomeSummaryUseCase
 
     @Test
-    fun `protected endpoint without bearer token should return 401`() {
+    fun `protected endpoint without bearer token should return 403`() {
         mockMvc.perform(get("/api/home/summary"))
-            .andExpect(status().isUnauthorized)
+            .andExpect(status().isForbidden)
     }
 
     @Test

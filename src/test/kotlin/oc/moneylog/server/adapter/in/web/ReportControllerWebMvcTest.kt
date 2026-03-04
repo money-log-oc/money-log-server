@@ -1,7 +1,8 @@
 package oc.moneylog.server.adapter.`in`.web
 
 import oc.moneylog.server.adapter.`in`.web.report.ReportController
-import oc.moneylog.server.application.transaction.TransactionUseCase
+import oc.moneylog.server.application.report.ReportUseCase
+import oc.moneylog.server.infrastructure.security.JwtTokenProvider
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,11 +18,12 @@ import java.time.LocalDate
 class ReportControllerWebMvcTest {
     @Autowired lateinit var mockMvc: MockMvc
 
-    @MockitoBean lateinit var transactionUseCase: TransactionUseCase
+    @MockitoBean lateinit var reportUseCase: ReportUseCase
+    @MockitoBean lateinit var jwtTokenProvider: JwtTokenProvider
 
     @Test
     fun `monthly tag report returns 200`() {
-        whenever(transactionUseCase.monthlyTagReport("2026-03")).thenReturn(mapOf("음식" to 112000L))
+        whenever(reportUseCase.monthlyTagReport("2026-03")).thenReturn(mapOf("음식" to 112000L))
 
         mockMvc.perform(get("/api/reports/monthly-tags").param("month", "2026-03"))
             .andExpect(status().isOk)
@@ -30,7 +32,7 @@ class ReportControllerWebMvcTest {
 
     @Test
     fun `daily spending returns 200`() {
-        whenever(transactionUseCase.dailySpending("2026-03")).thenReturn(listOf(Triple(LocalDate.of(2026,3,2), 0L, 32500L)))
+        whenever(reportUseCase.dailySpending("2026-03")).thenReturn(listOf(Triple(LocalDate.of(2026,3,2), 0L, 32500L)))
 
         mockMvc.perform(get("/api/reports/daily-spending").param("month", "2026-03"))
             .andExpect(status().isOk)
