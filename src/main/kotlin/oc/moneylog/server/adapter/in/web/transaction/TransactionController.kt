@@ -1,6 +1,7 @@
 package oc.moneylog.server.adapter.`in`.web.transaction
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import oc.moneylog.server.dto.ExcludeUpdateRequest
 import oc.moneylog.server.dto.TagUpdateRequest
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
+@Tag(name = "transaction")
 @RestController
 @RequestMapping("/api/transactions")
 class TransactionController(

@@ -1,6 +1,7 @@
 package oc.moneylog.server.adapter.`in`.web.report
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
 import oc.moneylog.server.dto.DailySpendingItem
 import oc.moneylog.server.dto.TagReportItem
 import oc.moneylog.server.application.transaction.TransactionUseCase
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
+@Tag(name = "report")
 @RestController
 @RequestMapping("/api/reports")
 class ReportController(

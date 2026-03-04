@@ -48,4 +48,16 @@ class TransactionControllerWebMvcTest {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.tags[0]").value("음식"))
     }
+
+
+    @Test
+    fun `empty tagIds returns 400`() {
+        mockMvc.perform(
+            patch("/api/transactions/1/tag")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mapOf("tagIds" to emptyList<String>()))),
+        )
+            .andExpect(status().isBadRequest)
+    }
+
 }

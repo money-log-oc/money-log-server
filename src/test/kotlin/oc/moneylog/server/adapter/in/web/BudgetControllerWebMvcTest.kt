@@ -46,4 +46,18 @@ class BudgetControllerWebMvcTest {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.monthlyBudget").value(800000))
     }
+
+
+    @Test
+    fun `invalid budget payload returns 400`() {
+        val body = mapOf("paydayDay" to 31, "monthlyBudget" to -1)
+
+        mockMvc.perform(
+            put("/api/settings/budget")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(body)),
+        )
+            .andExpect(status().isBadRequest)
+    }
+
 }
