@@ -35,6 +35,11 @@ Each API task is DONE only when:
 - Access token only accepted for API auth (`typ=access`)
 - Refresh token cannot access protected APIs (`typ=refresh` denied)
 
+## Data migration baseline
+- Flyway enabled (local/dev/prod)
+- Baseline migration: `db/migration/V1__init_schema.sql`
+- JPA ddl-auto: `validate` (schema managed by Flyway)
+
 ## API completion snapshot (2026-03-04)
 - Budget API (`/api/settings/budget`)
   - implementation: DONE
