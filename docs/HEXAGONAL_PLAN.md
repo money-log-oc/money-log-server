@@ -24,3 +24,6 @@
 - `application/home/HomeSummaryService` now depends on `BudgetUseCase` instead of `BudgetService`.
 - Removed legacy `service/*` implementations (`BudgetService`, `TransactionService`, `AllowanceCalculator`).
 - Updated unit tests to target application/port contracts.
+- Legacy `/api/v1/*` compatibility controllers are now runtime-toggleable via:
+  - `moneylog.api.legacy-v1.enabled=true|false`
+  - default `true` (safe migration), switch to `false` for v1 route removal readiness.
