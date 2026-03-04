@@ -26,7 +26,7 @@ class SecurityConfig(
                         "/api/auth/**",
                         "/api/v1/auth/**",
                     ).permitAll()
-                    .anyRequest().authenticated()
+                    .anyRequest().hasRole("USER")
             }
             .httpBasic { it.disable() }
             .formLogin { it.disable() }

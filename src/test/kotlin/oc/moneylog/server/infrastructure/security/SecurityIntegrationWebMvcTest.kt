@@ -52,4 +52,13 @@ class SecurityIntegrationWebMvcTest {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.weeklyLimit").value(110000))
     }
+
+    @Test
+    fun `protected endpoint with refresh token should return 403`() {
+        mockMvc.perform(
+            get("/api/home/summary")
+                .header("Authorization", "Bearer ${jwtTokenProvider.createRefreshToken("kakao_123456")}"),
+        )
+            .andExpect(status().isForbidden)
+    }
 }

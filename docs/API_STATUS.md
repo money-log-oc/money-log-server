@@ -30,6 +30,11 @@ Each API task is DONE only when:
   - `MALFORMED_JSON`
   - `INTERNAL_ERROR`
 
+## Security baseline
+- Protected APIs: `hasRole("USER")` enforced
+- Access token only accepted for API auth (`typ=access`)
+- Refresh token cannot access protected APIs (`typ=refresh` denied)
+
 ## API completion snapshot (2026-03-04)
 - Budget API (`/api/settings/budget`)
   - implementation: DONE
