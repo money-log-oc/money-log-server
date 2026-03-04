@@ -51,6 +51,9 @@ Each API task is DONE only when:
 - Verified locally (2026-03-04): `./scripts/smoke.sh http://localhost:8080` ✅
 - Production smoke supports optional auth-flow via `KAKAO_TEST_ACCESS_TOKEN`
 
+## Release operations
+- Release checklist: `docs/RELEASE_CHECKLIST.md`
+
 ## Swagger/OpenAPI exposure check
 - Verified (2026-03-04):
   - `GET /swagger-ui.html` → `302` ✅ (swagger UI redirect)
