@@ -7,8 +7,8 @@
 - GET `/api/transactions` ✅ (Swagger + WebMvc test)
 - PATCH `/api/transactions/{id}/tag` ✅ (Swagger + WebMvc test + validation)
 - PATCH `/api/transactions/{id}/exclude` ✅ (Swagger + WebMvc test + error case)
-- GET `/api/reports/monthly-tags`
-- GET `/api/reports/daily-spending`
+- GET `/api/reports/monthly-tags` ✅ (Swagger + WebMvc test + required param validation)
+- GET `/api/reports/daily-spending` ✅ (Swagger + WebMvc test + required param validation)
 - POST `/api/auth/kakao`
 
 ## Legacy compatibility routes (temporary)
@@ -33,3 +33,7 @@ Each API task is DONE only when:
   - implementation: DONE
   - swagger/openapi annotations: DONE
   - tests: DONE (`TransactionControllerWebMvcTest` list/tag/exclude + edge cases)
+- Report API (`/api/reports/monthly-tags`, `/api/reports/daily-spending`)
+  - implementation: DONE
+  - swagger/openapi annotations: DONE
+  - tests: DONE (`ReportControllerWebMvcTest` happy + required param edge cases)

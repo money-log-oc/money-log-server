@@ -38,4 +38,16 @@ class ReportControllerWebMvcTest {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$[0].expense").value(32500))
     }
+
+    @Test
+    fun `monthly tags without month returns 400`() {
+        mockMvc.perform(get("/api/reports/monthly-tags"))
+            .andExpect(status().isBadRequest)
+    }
+
+    @Test
+    fun `daily spending without month returns 400`() {
+        mockMvc.perform(get("/api/reports/daily-spending"))
+            .andExpect(status().isBadRequest)
+    }
 }
