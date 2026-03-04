@@ -1,17 +1,21 @@
 # API Status
 
-## Implemented (v1 draft)
-- GET `/api/v1/settings/budget`
-- PUT `/api/v1/settings/budget`
-- GET `/api/v1/home/summary`
-- GET `/api/v1/transactions`
-- PATCH `/api/v1/transactions/{id}/tag`
-- PATCH `/api/v1/transactions/{id}/exclude`
-- GET `/api/v1/reports/monthly-tags`
-- GET `/api/v1/reports/daily-spending`
-- POST `/api/v1/auth/kakao` (skeleton)
+## Active routes (domain-based)
+- GET `/api/settings/budget`
+- PUT `/api/settings/budget`
+- GET `/api/home/summary`
+- GET `/api/transactions`
+- PATCH `/api/transactions/{id}/tag`
+- PATCH `/api/transactions/{id}/exclude`
+- GET `/api/reports/monthly-tags`
+- GET `/api/reports/daily-spending`
+- POST `/api/auth/kakao`
 
-## Next
-- Swagger/OpenAPI live docs
-- request/response schema examples
-- auth-required / public-required endpoint separation
+## Legacy compatibility routes (temporary)
+- `/api/v1/*` mappings are kept for compatibility and will be removed after app migration.
+
+## DoD policy
+Each API task is DONE only when:
+1) implementation
+2) swagger annotations/spec
+3) tests (happy + edge)
