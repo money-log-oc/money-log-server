@@ -1,16 +1,13 @@
 package oc.moneylog.server.service
 
 import oc.moneylog.server.domain.Transaction
-import oc.moneylog.server.persistence.entity.TransactionEntity
-import oc.moneylog.server.persistence.repo.TransactionRepository
-import oc.moneylog.server.store.InMemoryStore
+import oc.moneylog.server.application.port.out.TransactionPort
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 
 @Service
 class TransactionService(
-    private val store: InMemoryStore,
-    private val repository: TransactionRepository? = null,
+    private val transactionPort: TransactionPort,
 ) {
     fun list(month: String?, unclassifiedOnly: Boolean): List<Transaction> {
         val source = loadAll()
@@ -23,35 +20,20 @@ class TransactionService(
     }
 
     fun updateTags(transactionId: Long, tags: List<String>): Transaction {
-        if (repository != null) {
-            val entity = repository.findById(transactionId)
-                .orElseThrow { IllegalArgumentException("transaction not found: $transactionId") }
-            entity.tags = tags.filter { it.isNotBlank() }.toMutableSet()
-            entity.excluded = false
-            entity.exclusionReason = null
-            return repository.save(entity).toDomain()
-        }
-
-        val tx = findInStore(transactionId)
+        val tx = transactionPort.findById(transactionId)
+            ?: throw IllegalArgumentException("transaction not found: $transactionId")
         tx.tags = tags.filter { it.isNotBlank() }.toMutableSet()
         tx.excluded = false
         tx.exclusionReason = null
-        return tx
+        return transactionPort.save(tx)
     }
 
     fun updateExcluded(transactionId: Long, excluded: Boolean, reason: String?): Transaction {
-        if (repository != null) {
-            val entity = repository.findById(transactionId)
-                .orElseThrow { IllegalArgumentException("transaction not found: $transactionId") }
-            entity.excluded = excluded
-            entity.exclusionReason = if (excluded) reason ?: "MANUAL" else null
-            return repository.save(entity).toDomain()
-        }
-
-        val tx = findInStore(transactionId)
+        val tx = transactionPort.findById(transactionId)
+            ?: throw IllegalArgumentException("transaction not found: $transactionId")
         tx.excluded = excluded
         tx.exclusionReason = if (excluded) reason ?: "MANUAL" else null
-        return tx
+        return transactionPort.save(tx)
     }
 
     fun monthlyTagReport(month: String): Map<String, Long> {
@@ -84,23 +66,5 @@ class TransactionService(
             .toList()
     }
 
-    private fun loadAll(): MutableList<Transaction> {
-        if (repository != null) {
-            return repository.findAll().map { it.toDomain() }.toMutableList()
-        }
-        return store.transactions
-    }
-
-    private fun findInStore(id: Long): Transaction =
-        store.transactions.find { it.id == id } ?: throw IllegalArgumentException("transaction not found: $id")
-
-    private fun TransactionEntity.toDomain(): Transaction = Transaction(
-        id = id ?: 0,
-        occurredAt = occurredAt,
-        merchant = merchant,
-        amount = amount,
-        tags = tags,
-        excluded = excluded,
-        exclusionReason = exclusionReason,
-    )
+    private fun loadAll(): MutableList<Transaction> = transactionPort.findAll().toMutableList()
 }
