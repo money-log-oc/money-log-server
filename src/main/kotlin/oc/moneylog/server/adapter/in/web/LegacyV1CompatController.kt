@@ -2,6 +2,7 @@ package oc.moneylog.server.adapter.`in`.web
 
 import io.swagger.v3.oas.annotations.Hidden
 import jakarta.validation.Valid
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import oc.moneylog.server.adapter.`in`.web.budget.BudgetController
 import oc.moneylog.server.adapter.`in`.web.home.HomeController
 import oc.moneylog.server.adapter.`in`.web.report.ReportController
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*
 
 @Hidden
 @RestController
+@ConditionalOnProperty(prefix = "moneylog.api.legacy-v1", name = ["enabled"], havingValue = "true", matchIfMissing = true)
 @RequestMapping("/api/v1")
 class LegacyV1CompatController(
     private val budget: BudgetController,

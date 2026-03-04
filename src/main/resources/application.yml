@@ -21,3 +21,8 @@ springdoc:
     path: /swagger-ui.html
   api-docs:
     path: /v3/api-docs
+
+moneylog:
+  api:
+    legacy-v1:
+      enabled: true

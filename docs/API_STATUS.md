@@ -14,6 +14,8 @@
 
 ## Legacy compatibility routes (temporary)
 - `/api/v1/*` mappings are kept for compatibility and will be removed after app migration.
+- Legacy compatibility layer can now be toggled via config:
+  - `moneylog.api.legacy-v1.enabled=true|false`
 
 ## DoD policy
 Each API task is DONE only when:
