@@ -4,9 +4,9 @@
 - GET `/api/settings/budget` ✅ (Swagger + WebMvc test)
 - PUT `/api/settings/budget` ✅ (Swagger + WebMvc test + validation)
 - GET `/api/home/summary` ✅ (Swagger + WebMvc test)
-- GET `/api/transactions`
-- PATCH `/api/transactions/{id}/tag`
-- PATCH `/api/transactions/{id}/exclude`
+- GET `/api/transactions` ✅ (Swagger + WebMvc test)
+- PATCH `/api/transactions/{id}/tag` ✅ (Swagger + WebMvc test + validation)
+- PATCH `/api/transactions/{id}/exclude` ✅ (Swagger + WebMvc test + error case)
 - GET `/api/reports/monthly-tags`
 - GET `/api/reports/daily-spending`
 - POST `/api/auth/kakao`
@@ -25,3 +25,11 @@ Each API task is DONE only when:
   - implementation: DONE
   - swagger/openapi annotations: DONE
   - tests: DONE (`BudgetControllerWebMvcTest` happy + invalid payload)
+- Home Summary API (`/api/home/summary`)
+  - implementation: DONE
+  - swagger/openapi annotations: DONE
+  - tests: DONE (`HomeControllerWebMvcTest`)
+- Transaction API (`/api/transactions`, `/tag`, `/exclude`)
+  - implementation: DONE
+  - swagger/openapi annotations: DONE
+  - tests: DONE (`TransactionControllerWebMvcTest` list/tag/exclude + edge cases)

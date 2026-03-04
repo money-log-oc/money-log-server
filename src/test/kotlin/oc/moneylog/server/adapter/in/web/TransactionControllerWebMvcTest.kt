@@ -60,4 +60,32 @@ class TransactionControllerWebMvcTest {
             .andExpect(status().isBadRequest)
     }
 
+    @Test
+    fun `patch transaction exclude updates excluded and reason`() {
+        val tx = Transaction(1, LocalDateTime.now(), "파리바게뜨", 2700, mutableSetOf("음식"), excluded = true, exclusionReason = "TRANSFER")
+        whenever(transactionUseCase.updateExcluded(1, true, "TRANSFER")).thenReturn(tx)
+
+        mockMvc.perform(
+            patch("/api/transactions/1/exclude")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"excluded":true,"reason":"TRANSFER"}"""),
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.excluded").value(true))
+            .andExpect(jsonPath("$.exclusionReason").value("TRANSFER"))
+    }
+
+    @Test
+    fun `patch transaction exclude missing transaction returns 400`() {
+        whenever(transactionUseCase.updateExcluded(999, true, null)).thenThrow(IllegalArgumentException("transaction not found: 999"))
+
+        mockMvc.perform(
+            patch("/api/transactions/999/exclude")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"excluded":true}"""),
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
+    }
+
 }
