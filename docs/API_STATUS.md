@@ -44,6 +44,11 @@ Each API task is DONE only when:
   - `SPRING_PROFILES_ACTIVE=dev ... ./gradlew test` ✅
   - `SPRING_PROFILES_ACTIVE=prod ... ./gradlew test` ✅
 
+## Railway smoke automation
+- Script: `scripts/smoke.sh`
+- Verified locally (2026-03-04): `./scripts/smoke.sh http://localhost:8080` ✅
+- Production smoke supports optional auth-flow via `KAKAO_TEST_ACCESS_TOKEN`
+
 ## API completion snapshot (2026-03-04)
 - Budget API (`/api/settings/budget`)
   - implementation: DONE

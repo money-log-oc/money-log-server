@@ -24,3 +24,21 @@ If still 404 on new endpoints:
 
 ## 4) Health
 - `/actuator/health` must return `UP`
+
+## 5) Smoke test automation
+```bash
+# default target: production railway url
+./scripts/smoke.sh
+
+# explicit target
+./scripts/smoke.sh https://money-log-server-production.up.railway.app
+
+# full auth-flow smoke (optional)
+KAKAO_TEST_ACCESS_TOKEN=<real-kakao-token> ./scripts/smoke.sh
+```
+
+Checks:
+1. health UP
+2. swagger reachable
+3. invalid kakao token should return standardized 400 error
+4. (optional) real kakao token login + protected API access
