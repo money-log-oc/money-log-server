@@ -1,8 +1,8 @@
 # API Status
 
 ## Active routes (domain-based)
-- GET `/api/settings/budget`
-- PUT `/api/settings/budget`
+- GET `/api/settings/budget` ✅ (Swagger + WebMvc test)
+- PUT `/api/settings/budget` ✅ (Swagger + WebMvc test + validation)
 - GET `/api/home/summary`
 - GET `/api/transactions`
 - PATCH `/api/transactions/{id}/tag`
