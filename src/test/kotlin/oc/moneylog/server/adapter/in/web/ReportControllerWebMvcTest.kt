@@ -5,8 +5,8 @@ import oc.moneylog.server.application.transaction.TransactionUseCase
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -17,7 +17,7 @@ import java.time.LocalDate
 class ReportControllerWebMvcTest {
     @Autowired lateinit var mockMvc: MockMvc
 
-    @MockBean lateinit var transactionUseCase: TransactionUseCase
+    @MockitoBean lateinit var transactionUseCase: TransactionUseCase
 
     @Test
     fun `monthly tag report returns 200`() {

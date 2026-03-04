@@ -6,8 +6,8 @@ import oc.moneylog.server.dto.HomeSummaryResponse
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
@@ -17,10 +17,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 class LegacyV1CompatControllerWebMvcTest {
     @Autowired lateinit var mockMvc: MockMvc
 
-    @MockBean lateinit var budgetController: oc.moneylog.server.adapter.`in`.web.budget.BudgetController
-    @MockBean lateinit var homeController: HomeController
-    @MockBean lateinit var transactionController: oc.moneylog.server.adapter.`in`.web.transaction.TransactionController
-    @MockBean lateinit var reportController: oc.moneylog.server.adapter.`in`.web.report.ReportController
+    @MockitoBean lateinit var budgetController: oc.moneylog.server.adapter.`in`.web.budget.BudgetController
+    @MockitoBean lateinit var homeController: HomeController
+    @MockitoBean lateinit var transactionController: oc.moneylog.server.adapter.`in`.web.transaction.TransactionController
+    @MockitoBean lateinit var reportController: oc.moneylog.server.adapter.`in`.web.report.ReportController
 
     @Test
     fun `legacy v1 home summary route should work`() {
