@@ -19,3 +19,9 @@ Each API task is DONE only when:
 1) implementation
 2) swagger annotations/spec
 3) tests (happy + edge)
+
+## API completion snapshot (2026-03-04)
+- Budget API (`/api/settings/budget`)
+  - implementation: DONE
+  - swagger/openapi annotations: DONE
+  - tests: DONE (`BudgetControllerWebMvcTest` happy + invalid payload)
