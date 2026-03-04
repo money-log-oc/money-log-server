@@ -15,3 +15,9 @@ docker compose up -d
 
 ## 4) Health check
 - http://localhost:8080/actuator/health
+
+## Verification log (2026-03-04)
+- `docker compose up -d` ✅ (`moneylog-postgres` healthy)
+- `./gradlew bootRun --args='--spring.profiles.active=local'` ✅ (8080)
+- `GET /actuator/health` ✅ `UP`
+- `GET /swagger-ui.html` ✅ (302 redirect)
