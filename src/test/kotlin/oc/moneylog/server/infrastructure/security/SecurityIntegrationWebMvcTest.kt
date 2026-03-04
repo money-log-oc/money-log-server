@@ -21,6 +21,9 @@ class SecurityIntegrationWebMvcTest {
     @Autowired
     lateinit var mockMvc: MockMvc
 
+    @Autowired
+    lateinit var jwtTokenProvider: JwtTokenProvider
+
     @MockitoBean
     lateinit var homeSummaryUseCase: HomeSummaryUseCase
 
@@ -44,7 +47,7 @@ class SecurityIntegrationWebMvcTest {
 
         mockMvc.perform(
             get("/api/home/summary")
-                .header("Authorization", "Bearer ml_access_abcdef"),
+                .header("Authorization", "Bearer ${jwtTokenProvider.createAccessToken("kakao_123456")}"),
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.weeklyLimit").value(110000))
