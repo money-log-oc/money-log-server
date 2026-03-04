@@ -39,6 +39,10 @@ Each API task is DONE only when:
 - Flyway enabled (local/dev/prod)
 - Baseline migration: `db/migration/V1__init_schema.sql`
 - JPA ddl-auto: `validate` (schema managed by Flyway)
+- Profile verification (2026-03-04):
+  - `SPRING_PROFILES_ACTIVE=local ./gradlew test` ✅
+  - `SPRING_PROFILES_ACTIVE=dev ... ./gradlew test` ✅
+  - `SPRING_PROFILES_ACTIVE=prod ... ./gradlew test` ✅
 
 ## API completion snapshot (2026-03-04)
 - Budget API (`/api/settings/budget`)
