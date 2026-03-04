@@ -20,6 +20,15 @@ Each API task is DONE only when:
 2) swagger annotations/spec
 3) tests (happy + edge)
 
+## Standard error response/code
+- Response shape: `ErrorResponse(message, code, path, timestamp)`
+- Error codes:
+  - `BAD_REQUEST`
+  - `VALIDATION_ERROR`
+  - `MISSING_PARAMETER`
+  - `MALFORMED_JSON`
+  - `INTERNAL_ERROR`
+
 ## API completion snapshot (2026-03-04)
 - Budget API (`/api/settings/budget`)
   - implementation: DONE

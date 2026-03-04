@@ -55,6 +55,18 @@ class BudgetControllerWebMvcTest {
                 .content("""{"paydayDay":31,"monthlyBudget":-1}"""),
         )
             .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+    }
+
+    @Test
+    fun `malformed json returns 400 with standardized code`() {
+        mockMvc.perform(
+            put("/api/settings/budget")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"paydayDay":25,"monthlyBudget":}"""),
+        )
+            .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.code").value("MALFORMED_JSON"))
     }
 
 }

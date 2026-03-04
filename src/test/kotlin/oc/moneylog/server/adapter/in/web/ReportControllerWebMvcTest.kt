@@ -43,11 +43,13 @@ class ReportControllerWebMvcTest {
     fun `monthly tags without month returns 400`() {
         mockMvc.perform(get("/api/reports/monthly-tags"))
             .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.code").value("MISSING_PARAMETER"))
     }
 
     @Test
     fun `daily spending without month returns 400`() {
         mockMvc.perform(get("/api/reports/daily-spending"))
             .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.code").value("MISSING_PARAMETER"))
     }
 }
