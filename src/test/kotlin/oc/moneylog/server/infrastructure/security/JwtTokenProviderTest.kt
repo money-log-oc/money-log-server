@@ -35,4 +35,21 @@ class JwtTokenProviderTest {
     fun `authenticateIfValid rejects malformed token`() {
         assertFalse(provider.authenticateIfValid("not-a-jwt"))
     }
+
+    @Test
+    fun `reissueFromRefreshToken returns new pair for valid refresh token`() {
+        val refresh = provider.createRefreshToken("kakao_123456")
+        val reissued = provider.reissueFromRefreshToken(refresh)
+
+        assertTrue(reissued != null)
+        assertTrue(provider.authenticateIfValid(reissued!!.accessToken))
+        assertTrue(reissued.refreshToken.isNotBlank())
+        assertTrue(reissued.userId == "kakao_123456")
+    }
+
+    @Test
+    fun `reissueFromRefreshToken rejects access token`() {
+        val access = provider.createAccessToken("kakao_123456")
+        assertTrue(provider.reissueFromRefreshToken(access) == null)
+    }
 }

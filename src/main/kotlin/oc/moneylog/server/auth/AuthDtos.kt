@@ -19,3 +19,10 @@ data class AuthResponse(
     @field:Schema(example = "kakao_xxxxxx")
     val userId: String,
 )
+
+@Schema(description = "토큰 재발급 요청")
+data class RefreshTokenRequest(
+    @field:NotBlank
+    @field:Schema(example = "<refresh-jwt-token>")
+    val refreshToken: String,
+)

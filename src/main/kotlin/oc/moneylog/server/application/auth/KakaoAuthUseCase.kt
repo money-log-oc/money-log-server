@@ -4,4 +4,5 @@ import oc.moneylog.server.auth.AuthResponse
 
 interface KakaoAuthUseCase {
     fun loginWithAccessToken(accessToken: String): AuthResponse
+    fun reissue(refreshToken: String): AuthResponse
 }

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class KakaoAuthApplicationServiceTest {
@@ -29,5 +30,24 @@ class KakaoAuthApplicationServiceTest {
         assertTrue(out.accessToken.isNotBlank())
         assertTrue(out.refreshToken.isNotBlank())
         assertTrue(jwtTokenProvider.authenticateIfValid(out.accessToken))
+    }
+
+    @Test
+    fun `reissue issues new token pair from valid refresh token`() {
+        whenever(verifier.verify("kakao-token")).thenReturn(KakaoTokenInfo("kakao_123456"))
+        val login = sut.loginWithAccessToken("kakao-token")
+
+        val reissued = sut.reissue(login.refreshToken)
+
+        assertEquals("kakao_123456", reissued.userId)
+        assertTrue(jwtTokenProvider.authenticateIfValid(reissued.accessToken))
+        assertTrue(reissued.refreshToken.isNotBlank())
+    }
+
+    @Test
+    fun `reissue throws on invalid refresh token`() {
+        assertFailsWith<IllegalArgumentException> {
+            sut.reissue("invalid-refresh-token")
+        }
     }
 }

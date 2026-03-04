@@ -46,4 +46,20 @@ class AuthControllerWebMvcTest {
                 .content("""{"accessToken":""}"""),
         ).andExpect(status().isBadRequest)
     }
+
+    @Test
+    fun `refresh returns reissued auth response`() {
+        whenever(kakaoAuthUseCase.reissue("refresh-token")).thenReturn(
+            AuthResponse("new-access", "new-refresh", "kakao_123456"),
+        )
+
+        mockMvc.perform(
+            post("/api/auth/refresh")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""{"refreshToken":"refresh-token"}"""),
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.accessToken").value("new-access"))
+            .andExpect(jsonPath("$.refreshToken").value("new-refresh"))
+    }
 }

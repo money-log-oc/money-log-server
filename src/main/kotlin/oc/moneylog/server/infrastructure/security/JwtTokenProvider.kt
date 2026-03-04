@@ -42,6 +42,23 @@ class JwtTokenProvider(
         return true
     }
 
+    fun reissueFromRefreshToken(refreshToken: String): ReissuedTokens? {
+        val claims = parseClaims(refreshToken) ?: return null
+        if (claims["typ"] != "refresh") return null
+        val userId = claims.subject ?: return null
+        return ReissuedTokens(
+            userId = userId,
+            accessToken = createAccessToken(userId),
+            refreshToken = createRefreshToken(userId),
+        )
+    }
+
+    data class ReissuedTokens(
+        val userId: String,
+        val accessToken: String,
+        val refreshToken: String,
+    )
+
     private fun createToken(userId: String, type: String, expSeconds: Long): String {
         val now = Instant.now()
         return Jwts.builder()

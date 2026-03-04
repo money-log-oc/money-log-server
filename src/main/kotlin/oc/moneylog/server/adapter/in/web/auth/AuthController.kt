@@ -6,6 +6,7 @@ import jakarta.validation.Valid
 import oc.moneylog.server.application.auth.KakaoAuthUseCase
 import oc.moneylog.server.auth.AuthResponse
 import oc.moneylog.server.auth.KakaoLoginRequest
+import oc.moneylog.server.auth.RefreshTokenRequest
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -21,4 +22,9 @@ class AuthController(
     @PostMapping("/kakao")
     fun kakaoLogin(@Valid @RequestBody req: KakaoLoginRequest): AuthResponse =
         kakaoAuthUseCase.loginWithAccessToken(req.accessToken)
+
+    @Operation(summary = "토큰 재발급")
+    @PostMapping("/refresh")
+    fun refresh(@Valid @RequestBody req: RefreshTokenRequest): AuthResponse =
+        kakaoAuthUseCase.reissue(req.refreshToken)
 }

@@ -17,4 +17,14 @@ class KakaoAuthApplicationService(
             userId = kakao.kakaoUserId,
         )
     }
+
+    override fun reissue(refreshToken: String): AuthResponse {
+        val reissued = jwtTokenProvider.reissueFromRefreshToken(refreshToken)
+            ?: throw IllegalArgumentException("invalid refresh token")
+        return AuthResponse(
+            accessToken = reissued.accessToken,
+            refreshToken = reissued.refreshToken,
+            userId = reissued.userId,
+        )
+    }
 }

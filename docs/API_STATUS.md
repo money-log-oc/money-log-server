@@ -9,7 +9,8 @@
 - PATCH `/api/transactions/{id}/exclude` ✅ (Swagger + WebMvc test + error case)
 - GET `/api/reports/monthly-tags` ✅ (Swagger + WebMvc test + required param validation)
 - GET `/api/reports/daily-spending` ✅ (Swagger + WebMvc test + required param validation)
-- POST `/api/auth/kakao`
+- POST `/api/auth/kakao` ✅ (Kakao 토큰 검증 + JWT 발급)
+- POST `/api/auth/refresh` ✅ (refresh 토큰 기반 access/refresh 재발급)
 
 ## Legacy compatibility routes (temporary)
 - `/api/v1/*` mappings are kept for compatibility and will be removed after app migration.
