@@ -3,7 +3,7 @@
 ## Active routes (domain-based)
 - GET `/api/settings/budget` ✅ (Swagger + WebMvc test)
 - PUT `/api/settings/budget` ✅ (Swagger + WebMvc test + validation)
-- GET `/api/home/summary`
+- GET `/api/home/summary` ✅ (Swagger + WebMvc test)
 - GET `/api/transactions`
 - PATCH `/api/transactions/{id}/tag`
 - PATCH `/api/transactions/{id}/exclude`
