@@ -22,3 +22,5 @@
   - `application/transaction/TransactionApplicationService`
 - Moved allowance calculations from `service/AllowanceCalculator` to `application/AllowanceCalculator`.
 - `application/home/HomeSummaryService` now depends on `BudgetUseCase` instead of `BudgetService`.
+- Removed legacy `service/*` implementations (`BudgetService`, `TransactionService`, `AllowanceCalculator`).
+- Updated unit tests to target application/port contracts.

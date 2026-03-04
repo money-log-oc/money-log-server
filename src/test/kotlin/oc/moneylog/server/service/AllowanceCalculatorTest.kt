@@ -1,4 +1,4 @@
-package oc.moneylog.server.service
+package oc.moneylog.server.application
 
 import oc.moneylog.server.domain.BudgetSettings
 import oc.moneylog.server.fixture.TransactionFixtures
